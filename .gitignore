@@ -1,6 +1,5 @@
 HELP.md
 target/
-**/src/main/resources/*.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -28,3 +27,8 @@ target/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/application-oauth.properties
+/src/main/resources/application-real-db.properties
+logs/
+src/main/resources/
+src/test/
