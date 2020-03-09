@@ -37,7 +37,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         OauthAttributes attributes = OauthAttributes.of(registraionId, userNameAttributeName, oAuth2User.getAttributes());
         Account account = saveOrUpdate(attributes);
 
-        return new DefaultOAuth2User(account.getRoles().stream().map(accountRole -> new SimpleGrantedAuthority("ROLE_" + accountRole.name())).collect(Collectors.toSet())
+        return new DefaultOAuth2User(account.getRoles().stream().map(accountRole -> new SimpleGrantedAuthority(accountRole.getKey())).collect(Collectors.toSet())
                 , attributes.getAttributes(), attributes.getUserNameAttributeName());
     }
 

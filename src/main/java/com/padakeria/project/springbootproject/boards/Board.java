@@ -1,5 +1,6 @@
 package com.padakeria.project.springbootproject.boards;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.padakeria.project.springbootproject.accounts.Account;
 import com.padakeria.project.springbootproject.common.BaseTimeEntity;
 import lombok.Builder;
@@ -17,7 +18,9 @@ public class Board extends BaseTimeEntity {
     @Column(name = "BOARD_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private Account account;
 
     @Lob
@@ -34,7 +37,7 @@ public class Board extends BaseTimeEntity {
         this.title = title;
     }
 
-    public void addAccount(Account account) {
+    void addAccount(Account account) {
         this.account = account;
         this.account.getBoardList().add(this);
     }

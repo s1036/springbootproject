@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,12 +49,15 @@ public class OauthAttributes {
     }
 
     public Account toEntity() {
+        Set<AccountRole> accountRoles = new HashSet<>();
+        accountRoles.add(AccountRole.USER);
+
     return Account.builder()
             .email(email)
             .name(name)
             .profileImage(picture)
             .registrationId(registraionId)
-            .roles(Set.of(AccountRole.USER))
+            .roles(accountRoles)
             .userPoint(0)
             .userSignUpDate(LocalDate.now())
             .build();

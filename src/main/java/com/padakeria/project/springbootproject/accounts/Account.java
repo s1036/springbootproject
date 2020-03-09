@@ -1,7 +1,9 @@
 package com.padakeria.project.springbootproject.accounts;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.padakeria.project.springbootproject.boards.Board;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,6 +44,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Set<AccountRole> roles;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "account")
     private List<Board>  boardList = new ArrayList<>();
 
