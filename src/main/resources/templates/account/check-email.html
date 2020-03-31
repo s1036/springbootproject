@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html::head">
+</head>
+<body class="bg-light">
+<div th:replace="fragments.html::main-nav"></div>
+<div class="container">
+    <div class="alert alert-warning" th:if="${error !=null}">
+        <p th:text="${error}">에러 메세지</p>
+    </div>
+    <div class="py-5 text-center">
+        <p class="text-info">이메일 인증이 필요합니다.</p>
+        <a class="btn btn-outline-info" th:href="@{/check-email-resend}">이메일 다시 보내기</a>
+    </div>
+</div>
+</body>
+</html>
+

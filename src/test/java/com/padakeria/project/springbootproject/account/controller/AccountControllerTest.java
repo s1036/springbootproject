@@ -4,6 +4,7 @@ import com.padakeria.project.springbootproject.account.domain.Account;
 import com.padakeria.project.springbootproject.account.dto.SignUpForm;
 import com.padakeria.project.springbootproject.account.domain.AccountRepository;
 import com.padakeria.project.springbootproject.account.service.AccountService;
+import com.padakeria.project.springbootproject.common.TestDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,8 @@ public class AccountControllerTest {
 
 
     @Test
+    @TestDescription("회원가입 화면 확인")
     public void signUpForm() throws Exception {
-
         mockMvc.perform(get("/sign-up"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -57,29 +58,30 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void signUpFormValidate_success() throws Exception {
+    @TestDescription("회원가입 성공")
+    public void signUp_success() throws Exception {
 
-        String email = "test123123@naver.com";
+        String email = "test@gmail.com";
+        String nickname = "test";
+        String password = "12345678";
+
         mockMvc.perform(post("/sign-up")
-                .param("nickname", "test123123")
+                .param("nickname", nickname)
                 .param("email", email)
-                .param("password", "123456").with(csrf()))
+                .param("password", password).with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(authenticated());
 
-
         assertTrue(accountRepository.existsByEmail(email));
-
         verify(javaMailSender).send(any(SimpleMailMessage.class));
     }
 
     @Test
-    public void signUpFormValidate_with_invalid_input() throws Exception {
-
-
+    @TestDescription("이미 가입된 아이디로 가입 시도시 실패")
+    public void signUp_with_invalid_input() throws Exception {
         Account account = Account.builder()
                 .email("test@naver.com")
                 .nickname("test")
@@ -100,6 +102,7 @@ public class AccountControllerTest {
     }
 
     @Test
+    @TestDescription("잘못된 토큰으로 이메일 인증 시도시 실패")
     public void signUpEmailTokenCheck_wrong_token() throws Exception {
         Account account = signUpProcess();
         accountService.loginProcess(account);
@@ -116,6 +119,7 @@ public class AccountControllerTest {
     }
 
     @Test
+    @TestDescription("이메일 인증 성공")
     public void signUpEmailTokenCheck_success() throws Exception {
         Account account = signUpProcess();
         accountService.loginProcess(account);
@@ -134,6 +138,7 @@ public class AccountControllerTest {
     }
 
     @Test
+    @TestDescription("이메일 재인증 성공")
     public void signUpEmailResend_success() throws Exception {
 
         Account account = signUpProcess();

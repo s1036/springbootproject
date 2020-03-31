@@ -1,8 +1,12 @@
 package com.padakeria.project.springbootproject.common.controller;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
+import com.padakeria.project.springbootproject.account.domain.AccountRepository;
 import com.padakeria.project.springbootproject.account.dto.SignUpForm;
 import com.padakeria.project.springbootproject.account.service.AccountService;
+import com.padakeria.project.springbootproject.common.TestDescription;
+import com.padakeria.project.springbootproject.common.WithAccount;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -33,9 +36,17 @@ public class MainControllerTest {
     private AccountService accountService;
 
     @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
     private MockMvc mockMvc;
 
+    @After
+    public void after() {
+        accountRepository.deleteAll();
+    }
+
     @Test
+    @TestDescription("로그인 성공")
     public void login_success() throws Exception {
 
         signUpProcess();
@@ -60,6 +71,7 @@ public class MainControllerTest {
     }
 
     @Test
+    @TestDescription("형식에 안맞는 값 입력시 로그인 실패")
     public void login_fail() throws Exception {
         signUpProcess();
 
@@ -82,10 +94,9 @@ public class MainControllerTest {
     }
 
     @Test
+    @TestDescription("로그아웃 성공")
+    @WithAccount(username = "test")
     public void logout() throws Exception {
-        Account account = signUpProcess();
-        accountService.loginProcess(account);
-
         mockMvc.perform(post("/logout")
                 .with(csrf()))
                 .andDo(print())

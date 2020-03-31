@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html::head">
+</head>
+<head><title>이메일 인증 페이지</title></head>
+<body class="bg-light">
+<div th:replace="fragments.html::main-nav"></div>
+<div class="container">
+    <div class="py-5 text-center" th:if="${error}"><p>이메일 확인</p>
+        <div class="alert alert-danger" role="alert">잘못된 이메일 확인 링크입니다.</div>
+    </div>
+    <div class="py-5 text-center" th:if="${error ==null}"><p class="text-info">인증되었습니다. 활동이 가능합니다.</p></div>
+</div>
+<div th:replace="fragments.html::footer"></div>
+</body>
+</html>
+

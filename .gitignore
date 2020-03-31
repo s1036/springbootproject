@@ -3,6 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+/src/main/resources/application-real-db.properties
+logs/
+/src/main/resources/static/node_modules/
+/src/main/resources/static/
 ### STS ###
 .apt_generated
 .classpath
@@ -27,7 +31,3 @@ target/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-real-db.properties
-logs/
-src/main/resources/
-

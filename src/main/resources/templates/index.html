@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html::head"></head>
+<head><title>친밥</title></head>
+<body class="bg-light">
+<div th:replace="fragments.html::main-nav"></div>
+<div class="container">
+    <div class="alert alert-warning" th:if="${account != null && account.isEmailVerified() == false  }">
+        이메일 인증이 필요합니다 <a href="#" th:href="@{/check-email}">인증 이메일을 확인하세요</a>
+    </div>
+</div>
+<div th:replace="fragments.html::footer"></div>
+
+</body>
+</html>
+
