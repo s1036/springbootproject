@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="fragments.html::head"></head>
 <head><title>유저 정보</title></head>
 <body class="bg-light">
@@ -62,7 +62,7 @@
                             </span>
                         <span th:if="${isOwner && !account.emailVerified}" class="col-9">
                                 <a href="#"
-                                   th:href="@{'/checkemail?email=' + ${account.email}}">가입을 완료하려면 이메일을 확인하세요.</a>
+                                   th:href="@{'/check-email'}">가입을 완료하려면 이메일을 확인하세요.</a>
                             </span>
                         <span th:text="${#temporals.format(account.joinedAt, 'yyyy년 M월 가입')}" class="col-9"></span>
                     </p>
