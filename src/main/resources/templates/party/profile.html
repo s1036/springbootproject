@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-party-menu(currentMenu='profile')"></div>
+        </div>
+        <div class="col-6">
+            <h6 class="border-bottom border-gray pb-2 mb-0">모임 정보</h6>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-4 mb-0 large lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">모임명</strong>
+                    <span th:text="${party.name}">친밥</span>
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-4 mb-0 large lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">활동 지역</strong>
+                    <span th:text="${party.location}">서울</span>
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-4 mb-0 large lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">관리자</strong>
+                    <span th:text="${party.owner}">manager</span>
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-4 mb-0 large lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">주제</strong>
+                    <span th:text="${party.subject}">디저트</span>
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-4 mb-0 large lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">모임 소개</strong>
+                    <span th:text="${party.description}">반갑습니다</span>
+                </p>
+            </div>
+        </div>
+        <div class="col-2">
+            <svg th:if="${#strings.isEmpty(party.profileImage)}" class="img-fluid float-left rounded img-thumbnail"
+                 width="125" height="125" th:data-jdenticon-value="${party.name}"></svg>
+            <img th:if="${!#strings.isEmpty(party.profileImage)}" class="img-fluid float-left rounded img-thumbnail"
+                 th:src="${party.profileImage}" width="125" height="125">
+        </div>
+    </div>
+</div>
+<div th:replace="fragments.html :: footer"></div>
+</body>
+</html>

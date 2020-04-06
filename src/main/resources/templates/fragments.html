@@ -13,8 +13,9 @@
 </head>
 
 <nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" th:href="@{/}" >친 밥</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" th:href="@{/}">친 밥</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -33,7 +34,8 @@
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+                    <svg th:if="${#strings.isEmpty(account?.profileImage)}"
+                         th:data-jdenticon-value="${#authentication.name}"
                          width="24" height="24" class="rounded border bg-light"></svg>
                     <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
                          width="24" height="24" class="rounded border"/>
@@ -62,7 +64,7 @@
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
        th:href="@{/settings/profile}">프로필</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#"
-           th:href="@{/settings/password}">패스워드</a>
+       th:href="@{/settings/password}">패스워드</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active"
        href="#" th:href="@{/settings/notifications}">알림</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#"
@@ -71,5 +73,21 @@
        th:href="@{/settings/zones}">활동 지역</a>
     <a class="list-group-item list-group-item-action list-group-item-danger"
        th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+</div>
+
+<div th:fragment="settings-party-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
+       th:href="@{'/party/'+ ${party.id}+'/profile'}">소개</a>
+    <a class="list-group-item list-group-item-action" th:if="${isMember}" th:classappend="${currentMenu == 'member'}? active" href="#"
+       th:href="@{'/party/'+ ${party.id}+'/member'}">멤버</a>
+    <a class="list-group-item list-group-item-action" th:if="${isMember}" th:classappend="${currentMenu == 'join'}? active"
+       href="#" th:href="@{'/party/'+ ${party.id}+'/join'}">참가하기</a>
+    <a class="list-group-item list-group-item-action" th:if="${isMember}" th:classappend="${currentMenu == 'create'}? active" href="#"
+       th:href="@{'/party/'+ ${party.id}+'/create-event'}">등록하기</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:if="${isOwner}"
+       th:classappend="${currentMenu == 'managemember'}? active" href="#" th:href="@{'/party/'+ ${party.id}+'/manage-member'}">멤버 관리</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:if="${isOwner}"
+       th:classappend="${currentMenu == 'manageparty'}? active" href="#" th:href="@{'/party/'+ ${party.id}+'/manage-party'}">모임 관리</a>
+
 </div>
 </html>

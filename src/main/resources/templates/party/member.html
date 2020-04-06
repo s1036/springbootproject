@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-party-menu(currentMenu='member')"></div>
+        </div>
+        <div class="col-8">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">가입일</th>
+                    <th scope="col">등급</th>
+                </tr>
+                </thead>
+                <tbody th:each="member,index : ${memberList}">
+                <tr>
+                    <th scope="row" th:text="${index.count}">1</th>
+                    <td th:text="${member.account.nickname}">example</td>
+                    <td th:text="${#temporals.format(member.signupDate,'yyyy-MM-dd')}">2020-01-01</td>
+                    <td th:text="${member.getRole()}">일반</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments.html :: footer"></div>
+</body>
+</html>

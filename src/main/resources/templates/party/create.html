@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html::head">
+</head>
+<head><title>모임 생성 페이지</title></head>
+<body class="bg-light">
+<div th:replace="fragments.html::main-nav"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-12">
+            <div class="row mt-12">
+                <form class="col-sm-12" action="#"
+                      th:action="@{/party/create}" th:object="${partyRequestDto}" method="post" novalidate>
+                    <div class="form-group">
+                        <label for="name">모임명</label>
+                        <input id="name" type="text" th:field="*{name}" class="form-control"
+                               placeholder="모임의 이름을 넣어주세요" aria-describedby="nameHelp" required>
+                        <small id="bioHelp" class="form-text text-muted">
+                            3에서 30자 사이의 이름을 입력해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                            형식에 맞지 않습니다
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">지역</label>
+                        <input id="location" type="text" th:field="*{location}" class="form-control"
+                               placeholder="주요 활동 지역을 입력해주세요" aria-describedby="urlHelp" required>
+                        <small id="locationHelp" class="form-text text-muted">
+                            해당 모임의 활동 지역을 입력해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('location')}"
+                               th:errors="*{location}">
+                            반드시 입력해야 합니다.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">주제</label>
+                        <input id="subject" type="text" th:field="*{subject}" class="form-control"
+                               placeholder="해당 모임의 주제를 입력해주세요" aria-describedby="subjectHelp" required>
+                        <small id="subjectHelp" class="form-text text-muted">
+                            해당 모임의 주제를 입력해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('subject')}"
+                               th:errors="*{subject}">
+                            반드시 입력해야 합니다.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">모임 소개</label>
+                        <input id="description" type="text" th:field="*{description}" class="form-control"
+                               placeholder="모임에 대한 설명"
+                               aria-describedby="descriptionHelp" required>
+                        <small id="descriptionHelp" class="form-text text-muted">
+                            해당 모임에 대해서 간단히 설명해주세요
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="profileImage" type="hidden" th:field="*{profileImage}" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit"
+                                aria-describedby="submitHelp">생성하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-12">
+                <div class="card text-center">
+                    <div class="card-header">
+                        모임 프로필 이미지
+                    </div>
+                    <div class="mt-3" id="current-profile-image">
+                    </div>
+                    <div class="mt-3" id="new-profile-image"></div>
+                    <div class="card-body">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="profile-image-file">
+                            <label class="custom-file-label" for="profile-image-file">모임 프로필 이미지 변경</label>
+                        </div>
+                        <div id="new-profile-image-control" class="mt-3">
+                            <button class="btn btn-outline-primary btn-block" id="cut-button">자르기</button>
+                            <button class="btn btn-outline-success btn-block" id="confirm-button">확인</button>
+                            <button class="btn btn-outline-warning btn-block" id="reset-button">취소</button>
+                        </div>
+                        <div id="cropped-new-profile-image" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html::footer"></div>
+    <link rel="stylesheet" href="/node_modules/cropper/dist/cropper.min.css">
+    <script src="/node_modules/cropper/dist/cropper.min.js"></script>
+    <script src="/node_modules/jquery-cropper/dist/jquery-cropper.min.js"></script>
+    <script>
+        $(function () {
+            let cropper = '';
+            let $confirmBtn = $('#confirm-button');
+            let $cutBtn = $('#cut-button');
+            let $resetBtn = $('#reset-button');
+            let $newProfileImage = $('#new-profile-image');
+            let $currentProfileImage = $('#current-profile-image');
+            let $resultImage = $('#cropped-new-profile-image');
+            let $profileImage = $('#profileImage');
+
+            $newProfileImage.hide();
+            $cutBtn.hide();
+            $confirmBtn.hide();
+            $resetBtn.hide();
+            $('#profile-image-file').change(function (e) {
+                if (e.target.files.length === 1) {
+                    const render = new FileReader();
+                    render.onload = e => {
+                        if (e.target.result) {
+                            let img = document.createElement('img');
+                            img.id = 'new-profile';
+                            img.src = e.target.result;
+                            img.width = 250;
+                            $newProfileImage.html(img);
+                            $newProfileImage.show();
+                            $currentProfileImage.hide();
+
+                            let $newImage = $(img);
+                            $newImage.cropper({aspectRatio: 1});
+                            cropper = $newImage.data('cropper');
+                            $cutBtn.show();
+                            $confirmBtn.show();
+                            $resetBtn.show();
+                        }
+                    };
+                    render.readAsDataURL(e.target.files[0]);
+                }
+            });
+            $resetBtn.click(function () {
+                $newProfileImage.hide();
+                $cutBtn.hide();
+                $confirmBtn.hide();
+                $resetBtn.hide();
+                $currentProfileImage.hide();
+                $resultImage.hide();
+                $profileImage.val('');
+            });
+
+            $cutBtn.click(function () {
+                let dataUrl = cropper.getCroppedCanvas().toDataURL();
+                let newImage = document.createElement('img');
+
+                newImage.id = 'cropped-new-profile-image';
+                newImage.src = dataUrl;
+                newImage.width = 125;
+                $resultImage.html(newImage);
+                $resultImage.show();
+                $confirmBtn.show();
+
+                $confirmBtn.click(function () {
+                    $newProfileImage.html(newImage);
+                    $cutBtn.hide();
+                    $confirmBtn.hide();
+                    $profileImage.val(dataUrl);
+                });
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
+
