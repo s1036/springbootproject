@@ -2,11 +2,7 @@ package com.padakeria.project.springbootproject.party.service;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
 import com.padakeria.project.springbootproject.account.domain.AccountRepository;
-import com.padakeria.project.springbootproject.member.domain.Member;
-import com.padakeria.project.springbootproject.member.domain.MemberRepository;
-import com.padakeria.project.springbootproject.member.service.MemberService;
-import com.padakeria.project.springbootproject.party.domain.Party;
-import com.padakeria.project.springbootproject.party.domain.PartyRepository;
+import com.padakeria.project.springbootproject.party.domain.*;
 import com.padakeria.project.springbootproject.party.dto.PartyRequestDto;
 import com.padakeria.project.springbootproject.party.dto.PartyResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +19,45 @@ import java.util.stream.Collectors;
 public class PartyService {
     private final PartyRepository partyRepository;
     private final AccountRepository accountRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     public Party createParty(PartyRequestDto partyRequestDto) {
         Account account = accountRepository.findByNickname(partyRequestDto.getOwner());
         Party party = buildParty(partyRequestDto, account);
+        Member member = Member.builder()
+                .account(account)
+                .party(party)
+                .point(0)
+                .role(MemberRole.OWNER)
+                .signupDate(LocalDateTime.now())
+                .build();
+        member.addParty(party);
+        memberRepository.save(member);
 
-        memberService.signupParty(account, party);
         return partyRepository.save(party);
+    }
+
+    public void enrollParty(Account account, Party party) {
+        Member member = Member.builder()
+                .account(account)
+                .party(party)
+                .point(0)
+                .role(MemberRole.TEMPORARY)
+                .signupDate(LocalDateTime.now())
+                .build();
+        member.addParty(party);
+        memberRepository.save(member);
+        partyRepository.save(party);
+    }
+
+    public void cancelEnrollParty(Member member, Party party) {
+        member.deleteParty(party);
+        memberRepository.delete(member);
+    }
+
+    public void secedeParty(Member member, Party party) {
+        member.deleteParty(party);
+        memberRepository.delete(member);
     }
 
     public Page<PartyResponseDto> findPagedParty(Integer page) {
@@ -39,10 +66,6 @@ public class PartyService {
 
         long totalElements = parties.getTotalElements();
         return new PageImpl<>(parties.stream().map(PartyResponseDto::new).collect(Collectors.toList()), realPage, totalElements);
-    }
-
-    public Party findPartyById(Long id) {
-            return partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(id + "에 해당하는 모임이 없습니다."));
     }
 
 
@@ -56,5 +79,9 @@ public class PartyService {
                 .description(partyRequestDto.getDescription())
                 .profileImage(partyRequestDto.getProfileImage())
                 .build();
+    }
+
+    public void acceptMember(Member currentMember) {
+        currentMember.changeRole(MemberRole.USER);
     }
 }

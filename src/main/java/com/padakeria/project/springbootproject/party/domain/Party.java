@@ -1,7 +1,6 @@
 package com.padakeria.project.springbootproject.party.domain;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
-import com.padakeria.project.springbootproject.member.domain.Member;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,10 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -35,7 +33,7 @@ public class Party {
 
     private String subject;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party",cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party", cascade = CascadeType.REMOVE)
     private Set<Member> members = new LinkedHashSet<>();
 
     @Lob
@@ -56,15 +54,24 @@ public class Party {
     }
 
 
-
-    public boolean isOwner(String nickname) {
-        return this.owner.getNickname().equals(nickname);
+    public boolean isMember(Account account) {
+        return this.members.stream().anyMatch(member -> member.getAccount().equals(account));
     }
 
-    public boolean isMember(String nickname) {
-        return members.stream().anyMatch(member -> member.getAccount().getNickname().equals(nickname));
+    public Set<Member> getTemporaryMembers() {
+        return this.members.stream().filter(member -> member.getRole() == MemberRole.TEMPORARY).collect(Collectors.toSet());
+    }
+    public Set<Member> getAcceptedMember(){
+        return this.members.stream().filter(member -> member.getRole() != MemberRole.TEMPORARY).collect(Collectors.toSet());
     }
 
+    public Member getCurrentMember(Account account) {
+        return this.members.stream().filter(member -> member.getAccount().equals(account)).findFirst().orElseGet(Member::new);
+    }
+
+    public Integer countMember() {
+        return this.getMembers().size();
+    }
 
 // TODO: 2020-04-05 게시판, 공지,
 }

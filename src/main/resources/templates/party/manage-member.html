@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-party-menu(currentMenu='managemember')"></div>
+        </div>
+        <div class="col-8">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">가입일</th>
+                    <th scope="col">등급</th>
+                    <th scope="col">등급변경</th>
+                    <th scope="col">관리</th>
+                </tr>
+                </thead>
+                <tbody th:each="member,index : ${acceptedMemberList}">
+                <tr>
+                    <th scope="row" th:text="${index.count}">1</th>
+                        <td th:text="${member.account.nickname }" th:onclick="'window.location.href = \'' + @{/profile/{id}(id=${member.account.nickname})} + '\''">example</td>
+                    <td th:text="${#temporals.format(member.signupDate,'yyyy-MM-dd')}">2020-01-01</td>
+                    <td th:text="${member.getRole()}">일반</td>
+                    <td>
+                        <div class="btn btn-dark dropdown-toggle" type="button" id="dropdownRoleButton" data-toggle="dropdown">
+                            등급 선택
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item changeRoleButton" th:if="${isOwner}" th:text="소유자" th:attr="data-role='OWNER',data-member=${member.getId()}">소유자</a>
+                                <a class="dropdown-item changeRoleButton" th:if="${isOwner}" th:text="관리자" th:attr="data-role='MANAGER',data-member=${member.getId()}">관리자</a>
+                                <a class="dropdown-item changeRoleButton" th:text="일반" th:attr="data-role='USER',data-member=${member.getId()}">일반</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button id="banButton" class="btn btn-dark" th:attr="data-member=${member.getId()}" th:if="${!member.isManager()}">추방
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">가입일</th>
+                    <th scope="col">등급</th>
+                </tr>
+                </thead>
+                <tbody th:each="member,index : ${temporaryMemberList}">
+                <tr>
+                    <th scope="row" th:text="${index.count}">1</th>
+                    <td th:text="${member.account.nickname }" th:onclick="'window.location.href = \'' + @{/profile/{id}(id=${member.account.nickname})} + '\''">example</td>
+                    <td th:text="${#temporals.format(member.signupDate,'yyyy-MM-dd')}">2020-01-01</td>
+                    <td>
+                        <button id="acceptButton" class="btn btn-dark" th:attr="data-member=${member.getId()}">승인
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody th:if="${temporaryMemberList.size() == 0}">
+                <tr>
+                    <td>가입 신청을 한 멤버가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments.html :: footer"></div>
+<script>
+    $(function () {
+        $('#acceptButton').click(function () {
+            /*<![CDATA[*/
+            let partyId = [[${party.id}]];
+            let csrfToken = '[[${_csrf.token}]]';
+            /*]]>*/
+            let memberId = $(this).attr("data-member");
+
+            let $form = $('<form></form>');
+            $form.attr('action', '/party/accept/' + partyId + '/' + memberId);
+            $form.attr('method', 'post');
+            $form.append($('<input>', {type: 'hidden', name: '_csrf', value: csrfToken}));
+            $form.appendTo('body');
+            $form.submit();
+        });
+        $('#banButton').click(function () {
+            /*<![CDATA[*/
+            let partyId = [[${party.id}]];
+            let csrfToken = '[[${_csrf.token}]]';
+            /*]]>*/
+            let memberId = $(this).attr("data-member");
+
+            let $form = $('<form></form>');
+            $form.attr('action', '/party/ban/' + partyId + '/' + memberId);
+            $form.attr('method', 'post');
+            $form.append($('<input>', {type: 'hidden', name: '_csrf', value: csrfToken}));
+            $form.appendTo('body');
+            $form.submit();
+        });
+
+        $('.changeRoleButton').click(function () {
+            /*<![CDATA[*/
+            let partyId = [[${party.id}]];
+            let csrfToken = '[[${_csrf.token}]]';
+            /*]]>*/
+            let memberId = $(this).attr("data-member");
+            let role =  $(this).attr("data-role");
+
+            let $form = $('<form></form>');
+            $form.attr('action', '/party/change-role/' + partyId + '/' + memberId);
+            $form.attr('method', 'post');
+            $form.append($('<input>', {type: 'hidden', name: '_csrf', value: csrfToken}));
+            $form.append($('<input>', {type: 'hidden', name: 'role', value: role}));
+            $form.appendTo('body');
+            $form.submit();
+        });
+    });
+</script>
+</body>
+</html>
