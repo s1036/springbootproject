@@ -2,6 +2,7 @@ package com.padakeria.project.springbootproject.party.service;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
 import com.padakeria.project.springbootproject.account.domain.AccountRepository;
+import com.padakeria.project.springbootproject.common.exceptions.MemberChangeException;
 import com.padakeria.project.springbootproject.party.domain.*;
 import com.padakeria.project.springbootproject.party.dto.PartyRequestDto;
 import com.padakeria.project.springbootproject.party.dto.PartyResponseDto;
@@ -83,5 +84,28 @@ public class PartyService {
 
     public void acceptMember(Member currentMember) {
         currentMember.changeRole(MemberRole.USER);
+    }
+
+    public void banMember(Member member, Party party) {
+        if (member.isOwner())
+            throw new MemberChangeException(member.getParty().getId(), "모임의 관리자는 탈퇴될 수 없습니다.");
+
+        member.deleteParty(party);
+        memberRepository.delete(member);
+    }
+
+    public void changeRole(Member member, MemberRole role) {
+        if (member.isOwner()) {
+            throw new MemberChangeException(member.getParty().getId(), "모임의 관리자는 해당 기능으로 변경 될 수 없습니다.");
+        }
+        if (member.isTemporaryMember()) {
+            throw new MemberChangeException(member.getParty().getId(), "가입 신청 멤버는 해당 기능으로 등급을 변경 할 수 없습니다.");
+        }
+        if (role == MemberRole.OWNER) {
+            throw new MemberChangeException(member.getParty().getId(), "모임의 관리자는 관리자 위임으로만 가능합니다.");
+        }
+
+        member.changeRole(role);
+        memberRepository.save(member);
     }
 }

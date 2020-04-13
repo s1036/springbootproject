@@ -53,16 +53,20 @@
                 </p>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-1">
             <svg th:if="${#strings.isEmpty(party.profileImage)}" class="img-fluid float-left rounded img-thumbnail"
                  width="125" height="125" th:data-jdenticon-value="${party.name}"></svg>
             <img th:if="${!#strings.isEmpty(party.profileImage)}" class="img-fluid float-left rounded img-thumbnail"
                  th:src="${party.profileImage}" width="125" height="125">
-            <button id="enroll" class="party-button" th:if="${!isMember}">가입
-                버튼
+        </div>
+        <div class="col-1">
+            <button id="enroll" class="btn btn-dark party-button" th:if="${!isMember}">가입하기
+
             </button>
-            <button id="cancel" class="party-button" th:if="${isTemporaryMember && isMember}">가입 취소 버튼</button>
-            <button id="secede" class="party-button" th:if="${isAcceptMember}">탈퇴 버튼</button>
+            <button id="cancel" class="btn btn-dark party-button" th:if="${isTemporaryMember && isMember}">가입 취소
+
+            </button>
+            <button id="secede" class="btn btn-dark party-button" th:if="${isAcceptMember}">탈퇴하기</button>
         </div>
     </div>
     <div th:replace="fragments.html :: footer"></div>

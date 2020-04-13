@@ -30,7 +30,6 @@
                         <div class="btn btn-dark dropdown-toggle" type="button" id="dropdownRoleButton" data-toggle="dropdown">
                             등급 선택
                             <div class="dropdown-menu">
-                                <a class="dropdown-item changeRoleButton" th:if="${isOwner}" th:text="소유자" th:attr="data-role='OWNER',data-member=${member.getId()}">소유자</a>
                                 <a class="dropdown-item changeRoleButton" th:if="${isOwner}" th:text="관리자" th:attr="data-role='MANAGER',data-member=${member.getId()}">관리자</a>
                                 <a class="dropdown-item changeRoleButton" th:text="일반" th:attr="data-role='USER',data-member=${member.getId()}">일반</a>
                             </div>

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class ExceptionAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(Exception.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
     @ExceptionHandler
     public String errorException(HttpServletRequest req, Exception e) {
