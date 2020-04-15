@@ -112,20 +112,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>install-node-and-npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                    <execution>
                         <id>npm install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>cache clean --force</arguments>
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
                 </executions>
