@@ -125,7 +125,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>cache clean --force</arguments>
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
                 </executions>
