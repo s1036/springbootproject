@@ -11,7 +11,7 @@
     <groupId>com.padakeria.project</groupId>
     <artifactId>springbootproject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springbootproject</name>
+    <name>springbootprmavoject</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
@@ -125,7 +125,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>cache clean --force</arguments>
                         </configuration>
                     </execution>
                 </executions>
