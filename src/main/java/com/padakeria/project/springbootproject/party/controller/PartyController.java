@@ -116,7 +116,7 @@ public class PartyController {
     public String cancelEnrollmentParty(@PathVariable(name = "partyId") Party party, @CurrentUser Account account, RedirectAttributes redirectAttributes) {
         Member member = party.getCurrentMember(account);
         if (member.isTemporaryMember()) {
-            partyService.cancelEnrollParty(member, party);
+            partyService.cancelPartyEnrollment(member, party);
             redirectAttributes.addFlashAttribute("message", "가입 취소가 완료되었습니다.");
         } else {
             redirectAttributes.addFlashAttribute("error", "가입 취소가 실패하였습니다.");
@@ -169,7 +169,7 @@ public class PartyController {
         }
         if (!targetMember.isTemporaryMember()) {
             redirectAttributes.addFlashAttribute("error", "이미 허가된 회원입니다.");
-            return "redirect:/party/" + party.getId() + "/manage-member";
+            return "redirect:/party/" + party.getId() + "/profile";
         }
 
         partyService.acceptMember(targetMember);
@@ -215,7 +215,7 @@ public class PartyController {
         partyService.changeRole(targetMember, role);
 
 
-        redirectAttributes.addFlashAttribute("message", "추방에 성공하였습니다.");
+        redirectAttributes.addFlashAttribute("message", "등급 변경에 성공하였습니다.");
         return "redirect:/party/" + party.getId() + "/manage-member";
     }
 }

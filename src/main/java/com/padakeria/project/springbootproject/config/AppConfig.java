@@ -1,4 +1,4 @@
-package com.padakeria.project.springbootproject.config.auth;
+package com.padakeria.project.springbootproject.config;
 
 
 import org.modelmapper.ModelMapper;

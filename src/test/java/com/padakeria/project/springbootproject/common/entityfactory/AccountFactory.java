@@ -16,6 +16,9 @@ public class AccountFactory {
             account = Account.builder()
                     .nickname(nickname)
                     .email(nickname + "@email.com")
+                    .partyCreatedByWeb(true)
+                    .partyEnrollmentByWeb(true)
+                    .partyUpdatedByWeb(true)
                     .build();
         } else {
             account = accountRepository.findByNickname(nickname);

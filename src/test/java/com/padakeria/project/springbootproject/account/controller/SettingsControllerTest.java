@@ -152,12 +152,12 @@ public class SettingsControllerTest {
     public void notificationsUpdate_success() throws Exception {
 
         mockMvc.perform(post("/settings/notifications")
-                .param("studyCreatedByEmail", "true")
-                .param("studyEnrollmentByEmail", "true")
-                .param("studyUpdatedByEmail", "true")
-                .param("studyCreatedByWeb", "false")
-                .param("studyEnrollmentByWeb", "false")
-                .param("studyUpdatedByWeb", "false")
+                .param("partyCreatedByEmail", "true")
+                .param("partyEnrollmentByEmail", "true")
+                .param("partyUpdatedByEmail", "true")
+                .param("partyCreatedByWeb", "false")
+                .param("partyEnrollmentByWeb", "false")
+                .param("partyUpdatedByWeb", "false")
                 .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -167,12 +167,12 @@ public class SettingsControllerTest {
 
         Account account = accountRepository.findByNickname("test");
 
-        assertTrue(account.isStudyCreatedByEmail());
-        assertTrue(account.isStudyEnrollmentByEmail());
-        assertTrue(account.isStudyUpdatedByEmail());
-        assertFalse(account.isStudyCreatedByWeb());
-        assertFalse(account.isStudyEnrollmentByWeb());
-        assertFalse(account.isStudyUpdatedByWeb());
+        assertTrue(account.isPartyCreatedByEmail());
+        assertTrue(account.isPartyEnrollmentByEmail());
+        assertTrue(account.isPartyUpdatedByEmail());
+        assertFalse(account.isPartyCreatedByWeb());
+        assertFalse(account.isPartyEnrollmentByWeb());
+        assertFalse(account.isPartyUpdatedByWeb());
     }
 
     @Test

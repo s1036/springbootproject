@@ -45,17 +45,17 @@ public class Account {
     @Lob
     private String profileImage;
 
-    private boolean studyCreatedByEmail = false;
+    private boolean partyCreatedByEmail = false;
 
-    private boolean studyCreatedByWeb = true;
+    private boolean partyCreatedByWeb = true;
 
-    private boolean studyEnrollmentByEmail = false;
+    private boolean partyEnrollmentByEmail = false;
 
-    private boolean studyEnrollmentByWeb = true;
+    private boolean partyEnrollmentByWeb = true;
 
-    private boolean studyUpdatedByEmail = false;
+    private boolean partyUpdatedByEmail = false;
 
-    private boolean studyUpdatedByWeb = true;
+    private boolean partyUpdatedByWeb = true;
 
 
     public void generateEmailCheckToken() {
@@ -96,12 +96,12 @@ public class Account {
     }
 
     public Account updateNotifications(NotificationsForm notificationsForm) {
-        this.studyCreatedByEmail = notificationsForm.isStudyCreatedByEmail();
-        this.studyCreatedByWeb = notificationsForm.isStudyCreatedByWeb();
-        this.studyEnrollmentByEmail = notificationsForm.isStudyEnrollmentByEmail();
-        this.studyEnrollmentByWeb = notificationsForm.isStudyEnrollmentByWeb();
-        this.studyUpdatedByEmail = notificationsForm.isStudyUpdatedByEmail();
-        this.studyUpdatedByWeb = notificationsForm.isStudyUpdatedByWeb();
+        this.partyCreatedByEmail = notificationsForm.isPartyCreatedByEmail();
+        this.partyCreatedByWeb = notificationsForm.isPartyCreatedByWeb();
+        this.partyEnrollmentByEmail = notificationsForm.isPartyEnrollmentByEmail();
+        this.partyEnrollmentByWeb = notificationsForm.isPartyEnrollmentByWeb();
+        this.partyUpdatedByEmail = notificationsForm.isPartyUpdatedByEmail();
+        this.partyUpdatedByWeb = notificationsForm.isPartyUpdatedByWeb();
 
         return this;
     }

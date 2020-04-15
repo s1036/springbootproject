@@ -1,12 +1,11 @@
 package com.padakeria.project.springbootproject.party.controller;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
-import com.padakeria.project.springbootproject.common.entityfactory.AccountFactory;
 import com.padakeria.project.springbootproject.common.TestDescription;
 import com.padakeria.project.springbootproject.common.WithAccount;
+import com.padakeria.project.springbootproject.common.entityfactory.AccountFactory;
 import com.padakeria.project.springbootproject.common.entityfactory.PartyFactory;
 import com.padakeria.project.springbootproject.party.domain.*;
-import com.padakeria.project.springbootproject.party.dto.PartyRequestDto;
 import com.padakeria.project.springbootproject.party.service.PartyService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -212,10 +208,46 @@ public class PartyControllerTest {
     }
 
     @Test
+    @TestDescription("가입 신청 상태에서 관리자가 가입 승인을 하여 일반 멤버로 등록")
+    @WithAccount(username = "test")
+    public void acceptEnrollmentParty_success() throws Exception {
+        String username = "test";
+        Party party = partyFactory.createParty(username);
+        Account tryAccount = accountFactory.createAccount("account");
+        Member member = partyService.enrollParty(tryAccount, party);
+
+        mockMvc.perform(post("/party/accept/" + party.getId() + "/" + member.getId())
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(redirectedUrl("/party/" + party.getId() + "/manage-member"));
+
+        assertTrue(party.getAcceptedMember().stream().anyMatch(acceptedMember -> acceptedMember.getAccount().getNickname().equals("account")));
+        assertTrue(party.getTemporaryMembers().stream().noneMatch(temporaryMember -> temporaryMember.getAccount().getNickname().equals("account")));
+
+    }
+
+
+    @Test
     @TestDescription("모임 탈퇴하기")
     @WithAccount(username = "account")
     public void secedeEnrollmentParty_success() throws Exception {
-        // TODO: 2020-04-09 가입 승인 이후에 진행 
+        String username = "test";
+        Party party = partyFactory.createParty(username);
+        Account tryAccount = accountFactory.createAccount("account");
+        Member member = partyService.enrollParty(tryAccount, party);
+        partyService.acceptMember(member);
+
+        mockMvc.perform(post("/party/" + party.getId() + "/secede")
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/party/" + party.getId() + "/profile"))
+                .andExpect(flash().attributeExists("message"));
+
+
+        assertTrue(party.getAcceptedMember().stream().noneMatch(acceptedMember -> acceptedMember.getAccount().getNickname().equals("account")));
     }
 
     @Test
@@ -236,4 +268,44 @@ public class PartyControllerTest {
                 .andExpect(view().name("party/manage-member"));
     }
 
+    @Test
+    @TestDescription("모임 멤버 관리하기 추방기능 성공")
+    @WithAccount(username = "test")
+    public void banPartyMember_success() throws Exception {
+        Party party = partyFactory.createParty("test");
+        Account account = accountFactory.createAccount("banMember");
+        Member member = partyService.enrollParty(account, party);
+        partyService.acceptMember(member);
+
+        mockMvc.perform(post("/party/ban/" + party.getId() + "/" + member.getId())
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(redirectedUrl("/party/" + party.getId() + "/manage-member"));
+
+        assertFalse(party.getMembers().contains(member));
+    }
+
+    @Test
+    @TestDescription("모임 멤버 등급 변경")
+    @WithAccount(username = "test")
+    public void changeRolePartyMember_success() throws Exception {
+        Party party = partyFactory.createParty("test");
+        Account account = accountFactory.createAccount("changeRoleMember");
+        Member member = partyService.enrollParty(account, party);
+        partyService.acceptMember(member);
+
+        mockMvc.perform(post("/party/change-role/" + party.getId() + "/" + member.getId())
+                .param("role", "MANAGER")
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(redirectedUrl("/party/" + party.getId() + "/manage-member"));
+
+        assertTrue(party.getMembers().stream()
+                .filter(member1 -> member1.getAccount().getNickname().equals("changeRoleMember"))
+                .anyMatch(changeMember -> changeMember.getRole() == MemberRole.MANAGER));
+    }
 }

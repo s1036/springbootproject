@@ -6,7 +6,11 @@ import com.padakeria.project.springbootproject.common.exceptions.MemberChangeExc
 import com.padakeria.project.springbootproject.party.domain.*;
 import com.padakeria.project.springbootproject.party.dto.PartyRequestDto;
 import com.padakeria.project.springbootproject.party.dto.PartyResponseDto;
+import com.padakeria.project.springbootproject.party.event.MemberAcceptEvent;
+import com.padakeria.project.springbootproject.party.event.MemberCreateEvent;
+import com.padakeria.project.springbootproject.party.event.MemberUpdateEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final AccountRepository accountRepository;
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Party createParty(PartyRequestDto partyRequestDto) {
         Account account = accountRepository.findByNickname(partyRequestDto.getOwner());
@@ -32,13 +37,13 @@ public class PartyService {
                 .role(MemberRole.OWNER)
                 .signupDate(LocalDateTime.now())
                 .build();
-        member.addParty(party);
+        Party savedParty = partyRepository.save(party);
         memberRepository.save(member);
-
-        return partyRepository.save(party);
+        member.addParty(savedParty);
+        return savedParty;
     }
 
-    public void enrollParty(Account account, Party party) {
+    public Member enrollParty(Account account, Party party) {
         Member member = Member.builder()
                 .account(account)
                 .party(party)
@@ -46,12 +51,15 @@ public class PartyService {
                 .role(MemberRole.TEMPORARY)
                 .signupDate(LocalDateTime.now())
                 .build();
+
+        Member savedMember = memberRepository.save(member);
         member.addParty(party);
-        memberRepository.save(member);
-        partyRepository.save(party);
+
+        eventPublisher.publishEvent(new MemberCreateEvent(member));
+        return savedMember;
     }
 
-    public void cancelEnrollParty(Member member, Party party) {
+    public void cancelPartyEnrollment(Member member, Party party) {
         member.deleteParty(party);
         memberRepository.delete(member);
     }
@@ -84,6 +92,7 @@ public class PartyService {
 
     public void acceptMember(Member currentMember) {
         currentMember.changeRole(MemberRole.USER);
+        eventPublisher.publishEvent(new MemberAcceptEvent(currentMember));
     }
 
     public void banMember(Member member, Party party) {
@@ -92,6 +101,7 @@ public class PartyService {
 
         member.deleteParty(party);
         memberRepository.delete(member);
+        eventPublisher.publishEvent(new MemberUpdateEvent(member,party.getName()+"에서 "+member.getAccount().getNickname()+"님을 추방하였습니다."));
     }
 
     public void changeRole(Member member, MemberRole role) {
@@ -107,5 +117,6 @@ public class PartyService {
 
         member.changeRole(role);
         memberRepository.save(member);
+        eventPublisher.publishEvent(new MemberUpdateEvent(member,member.getParty().getName()+"에서 등급이 변경되었습니다"));
     }
 }

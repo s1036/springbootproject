@@ -9,17 +9,17 @@ import lombok.Setter;
 public class NotificationsForm {
 
 
-    private boolean studyCreatedByEmail;
+    private boolean partyCreatedByEmail;
 
-    private boolean studyCreatedByWeb;
+    private boolean partyCreatedByWeb;
 
-    private boolean studyEnrollmentByEmail;
+    private boolean partyEnrollmentByEmail;
 
-    private boolean studyEnrollmentByWeb;
+    private boolean partyEnrollmentByWeb;
 
-    private boolean studyUpdatedByEmail;
+    private boolean partyUpdatedByEmail;
 
-    private boolean studyUpdatedByWeb;
+    private boolean partyUpdatedByWeb;
 
 
 }

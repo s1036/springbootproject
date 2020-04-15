@@ -1,4 +1,4 @@
-package com.padakeria.project.springbootproject.config.auth;
+package com.padakeria.project.springbootproject.config;
 
 import com.padakeria.project.springbootproject.account.service.AccountService;
 import lombok.RequiredArgsConstructor;

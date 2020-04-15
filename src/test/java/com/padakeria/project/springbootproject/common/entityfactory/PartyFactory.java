@@ -25,6 +25,7 @@ public class PartyFactory {
             account = accountRepository.findByNickname(nickname);
         }
         Party party = Party.builder()
+                .name("foo")
                 .owner(account)
                 .build();
 
