@@ -46,13 +46,12 @@ public class Member {
     }
 
     public void deleteParty(Party party) {
-        this.party.getMembers().remove(this);
+        party.getMembers().remove(this);
         this.party = null;
     }
 
-    public Member changeRole(MemberRole role) {
+    public void changeRole(MemberRole role) {
         this.role = role;
-        return this;
     }
 
     public boolean isTemporaryMember() {

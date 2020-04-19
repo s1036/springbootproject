@@ -113,7 +113,7 @@ public class AccountService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String nicknameOrEmail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String nicknameOrEmail)  {
         Account loginAccount = accountRepository.findByEmail(nicknameOrEmail);
         if (loginAccount == null) {
             loginAccount = accountRepository.findByNickname(nicknameOrEmail);

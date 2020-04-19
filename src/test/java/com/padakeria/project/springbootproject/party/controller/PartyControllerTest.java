@@ -163,7 +163,7 @@ public class PartyControllerTest {
         boolean isMember = party.getMembers().stream().anyMatch(member -> member.getAccount().getNickname().equals("account"));
         assertTrue(isMember);
         Member enrolledMember = party.getMembers().stream().filter(member -> member.getAccount().getNickname().equals("account")).findFirst().orElseThrow(RuntimeException::new);
-        assertEquals(enrolledMember.getRole(), MemberRole.TEMPORARY);
+        assertEquals(MemberRole.TEMPORARY,enrolledMember.getRole());
     }
 
     @Test
