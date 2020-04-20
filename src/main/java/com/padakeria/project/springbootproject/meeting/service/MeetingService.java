@@ -52,7 +52,7 @@ public class MeetingService {
         List<String> imagesUrl = new ArrayList<>();
         for (MultipartFile image : images) {
             String filename = image.getOriginalFilename();
-            String savePath = "\\images\\";
+            String savePath = "images\\";
             File pathDir = new File(savePath);
             if (!pathDir.exists()) {
                 pathDir.mkdir();
