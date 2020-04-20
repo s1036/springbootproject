@@ -8,8 +8,6 @@ import com.padakeria.project.springbootproject.party.domain.Member;
 import com.padakeria.project.springbootproject.party.domain.Party;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -48,17 +46,13 @@ public class MeetingService {
 
     private List<String> saveImages(List<MultipartFile> images) throws IOException {
         List<String> imagesUrl = new ArrayList<>();
-
-        String path = System.getProperty("user.dir");
-        String savePath = path+ "/src/main/resources/static/images/";
-
         for (MultipartFile image : images) {
             String filename = image.getOriginalFilename();
+            String savePath = "/images/";
             File pathDir = new File(savePath);
             if (!pathDir.exists()) {
                 pathDir.mkdir();
             }
-
             String filePath = savePath + UUID.randomUUID().toString().replace("-", "") + filename;
             imagesUrl.add(filePath);
 
