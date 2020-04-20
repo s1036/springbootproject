@@ -64,7 +64,9 @@ public class MeetingService {
             imagesUrl.add(filePath);
             File file = new File(filePath);
 
-            log.info(file.getAbsolutePath() + "파일 경로!!");
+            log.info(file.getAbsolutePath() + "절대 경로!!");
+            log.info(file.getPath()+"경로");
+
             image.transferTo(file);
         }
         return imagesUrl;
