@@ -7,10 +7,7 @@ import com.padakeria.project.springbootproject.meeting.dto.MeetingRequestDto;
 import com.padakeria.project.springbootproject.party.domain.Member;
 import com.padakeria.project.springbootproject.party.domain.Party;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +52,7 @@ public class MeetingService {
         List<String> imagesUrl = new ArrayList<>();
         for (MultipartFile image : images) {
             String filename = image.getOriginalFilename();
-            String savePath = "/images/";
+            String savePath = "\\images\\";
             File pathDir = new File(savePath);
             if (!pathDir.exists()) {
                 pathDir.mkdir();
@@ -63,9 +60,6 @@ public class MeetingService {
             String filePath = savePath + UUID.randomUUID().toString().replace("-", "") + filename;
             imagesUrl.add(filePath);
             File file = new File(filePath);
-
-            log.info(file.getAbsolutePath() + "절대 경로!!");
-            log.info(file.getPath()+"경로");
 
             image.transferTo(file);
         }
