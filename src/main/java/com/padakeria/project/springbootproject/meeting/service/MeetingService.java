@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -26,9 +27,10 @@ public class MeetingService {
         Account account = member.getAccount();
         Party party = member.getParty();
         Meeting meeting;
+        List<MultipartFile> file = meetingRequestDto.getFile();
 
-        if (meetingRequestDto.getFile() != null && !meetingRequestDto.getFile().isEmpty()) {
-            List<String> imagesUrl = saveImages(meetingRequestDto.getFile());
+        if (fileCheck(file)) {
+            List<String> imagesUrl = saveImages(file);
             meeting = meetingRepository.save(meetingRequestDto.toEntityWithImages(account, party, imagesUrl));
         } else {
             meeting = meetingRepository.save(meetingRequestDto.toEntityWithoutImages(account, party));
@@ -38,6 +40,10 @@ public class MeetingService {
         return meeting;
     }
 
+    private boolean fileCheck(List<MultipartFile> file) {
+        return file != null && !Objects.equals(file.get(0).getOriginalFilename(), "") && !file.isEmpty();
+    }
+
     private List<String> saveImages(List<MultipartFile> images) throws IOException {
         List<String> imagesUrl = new ArrayList<>();
         for (MultipartFile image : images) {
@@ -45,6 +51,7 @@ public class MeetingService {
             String savePath = "/images/";
             String filePath = savePath + UUID.randomUUID().toString().replace("-", "") + filename;
             imagesUrl.add(filePath);
+
             File file = new File(filePath);
             image.transferTo(file);
         }

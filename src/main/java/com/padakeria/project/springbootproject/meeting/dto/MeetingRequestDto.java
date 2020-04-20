@@ -33,7 +33,6 @@ public class MeetingRequestDto {
 
     private Double locationPointY;
 
-    @Length(min = 2, max = 300)
     private Integer maxPeople;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

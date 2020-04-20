@@ -75,7 +75,6 @@ public class PartyController {
     public String viewPartyProfile(@PathVariable(name = "partyId") Party party, @CurrentUser Account account, Model model) {
         Member member = party.getCurrentMember(account);
 
-
         model.addAttribute("party", new PartyResponseDto(party));
         model.addAttribute("isMember", party.isMember(account));
         model.addAttribute("isTemporaryMember", member.isTemporaryMember());

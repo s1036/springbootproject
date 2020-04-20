@@ -1,7 +1,6 @@
 package com.padakeria.project.springbootproject.party.domain;
 
 import com.padakeria.project.springbootproject.account.domain.Account;
-import com.padakeria.project.springbootproject.common.exceptions.MemberNotFoundException;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -67,7 +66,7 @@ public class Party {
     }
 
     public Member getCurrentMember(Account account) {
-        return this.members.stream().filter(member -> member.getAccount().equals(account)).findFirst().orElseThrow(MemberNotFoundException::new);
+        return this.members.stream().filter(member -> member.getAccount().equals(account)).findFirst().orElseGet(Member::new);
     }
 
     public Integer countMember() {

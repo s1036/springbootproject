@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments.html::head">
 </head>
-<head><title>모임 생성 페이지</title></head>
+<head><title>그룹 생성 페이지</title></head>
 <body class="bg-light">
 <div th:replace="fragments.html::main-nav"></div>
 <div class="container">
@@ -12,9 +12,9 @@
                 <form class="col-sm-12" action="#"
                       th:action="@{/party/create}" th:object="${partyRequestDto}" method="post" novalidate>
                     <div class="form-group">
-                        <label for="name">모임명</label>
+                        <label for="name">그룹명</label>
                         <input id="name" type="text" th:field="*{name}" class="form-control"
-                               placeholder="모임의 이름을 넣어주세요" aria-describedby="nameHelp" required>
+                               placeholder="그룹의 이름을 넣어주세요" aria-describedby="nameHelp" required>
                         <small id="bioHelp" class="form-text text-muted">
                             3에서 30자 사이의 이름을 입력해주세요
                         </small>
@@ -39,9 +39,9 @@
                     <div class="form-group">
                         <label for="subject">주제</label>
                         <input id="subject" type="text" th:field="*{subject}" class="form-control"
-                               placeholder="해당 모임의 주제를 입력해주세요" aria-describedby="subjectHelp" required>
+                               placeholder="해당 그룹의 주제를 입력해주세요" aria-describedby="subjectHelp" required>
                         <small id="subjectHelp" class="form-text text-muted">
-                            해당 모임의 주제를 입력해주세요
+                            해당 그룹의 주제를 입력해주세요
                         </small>
                         <small class="form-text text-danger" th:if="${#fields.hasErrors('subject')}"
                                th:errors="*{subject}">
@@ -50,12 +50,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description">모임 소개</label>
+                        <label for="description">그룹 소개</label>
                         <input id="description" type="text" th:field="*{description}" class="form-control"
-                               placeholder="모임에 대한 설명"
+                               placeholder="그룹에 대한 설명"
                                aria-describedby="descriptionHelp" required>
                         <small id="descriptionHelp" class="form-text text-muted">
-                            해당 모임에 대해서 간단히 설명해주세요
+                            해당 그룹에 대해서 간단히 설명해주세요
                         </small>
                     </div>
 
