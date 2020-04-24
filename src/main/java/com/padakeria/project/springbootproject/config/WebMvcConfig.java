@@ -9,6 +9,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:/home/ec2-user/app/project/public/work/Tomcat/localhost/ROOT/images");
+//                .addResourceLocations("file:/home/ec2-user/app/project/public/work/Tomcat/localhost/ROOT/images");
+        .addResourceLocations("file:///home/ec2-user/app/project/public/work/Tomcat/localhost/ROOT/images/");
     }
 }
