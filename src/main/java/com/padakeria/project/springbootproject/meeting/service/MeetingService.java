@@ -49,11 +49,12 @@ public class MeetingService {
 
     public Page<MeetingResponseDto> findPagedMeeting(Integer page) {
         Pageable realPage = PageRequest.of(page <= 0 ? 0 : page - 1, 5, new Sort(Sort.Direction.DESC, "creation"));
-        Page<Meeting> meetings = meetingRepository.findAll(realPage);
+        Page<Meeting> meetings = meetingRepository.findByParty(realPage);
 
         long totalElements = meetings.getTotalElements();
         return new PageImpl<>(meetings.stream().map(MeetingResponseDto::new).collect(Collectors.toList()), realPage, totalElements);
     }
+
     private boolean fileCheck(List<MultipartFile> file) {
         return file != null && !Objects.equals(file.get(0).getOriginalFilename(), "") && !file.isEmpty();
     }
