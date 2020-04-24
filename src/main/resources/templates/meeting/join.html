@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div class="container">
+    <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+        <span th:text="${message}">메시지</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-party-menu(currentMenu='join')"></div>
+        </div>
+        <div class="col-8">
+            <h5 th:if="${#lists.isEmpty(meetingList)}" class="font-weight-light">참석할 모임이 없습니다.</h5>
+            <div th:each="list: ${meetingList}" th:if="${!#lists.isEmpty(meetingList)}">
+                <div class="col-sm-3">
+                    <div class="card" style="width: 400px">
+                        <img class="card-img-top" th:if="${list.thumbnailUrl != ''}" th:src="@{'/'+${list.thumbnailUrl}}"
+                             alt="Card image cap" th:width="125" th:height="125">
+                        <svg class="card-img-top" th:if="${list.thumbnailUrl==''}"
+                             th:data-jdenticon-value="${list.id}"th:width="125" th:height="125"></svg>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${list.getName()}">모임명</h5>
+                            <p class="card-text" th:text="${list.getDescription()}">모임 소개</p>
+                            <p class="card-text" th:text="${list.getCreation()}">모임 생성일</p>
+                            <a href="#" class="card-link"
+                               th:href="@{'/party/'+${list.getPartyId()}+'/meeting/'+${list.getId()}}">이동</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="fragments.html :: footer"></div>
+</body>
+</html>

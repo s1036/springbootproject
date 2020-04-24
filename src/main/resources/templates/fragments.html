@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head th:fragment="head">
     <meta charset="utf-8">
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
@@ -10,6 +10,7 @@
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+
 </head>
 
 <nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -78,16 +79,21 @@
 <div th:fragment="settings-party-menu (currentMenu)" class="list-group">
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
        th:href="@{'/party/'+ ${party.id}+'/profile'}">소개</a>
-    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}" th:classappend="${currentMenu == 'member'}? active" href="#"
+    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}"
+       th:classappend="${currentMenu == 'member'}? active" href="#"
        th:href="@{'/party/'+ ${party.id}+'/member'}">멤버</a>
-    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}" th:classappend="${currentMenu == 'join'}? active"
-       href="#" th:href="@{'/party/'+ ${party.id}+'/join'}">참가하기</a>
-    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}" th:classappend="${currentMenu == 'create'}? active" href="#"
+    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}"
+       th:classappend="${currentMenu == 'join'}? active"
+       href="#" th:href="@{'/party/'+ ${party.id}+'/meeting/join'}">참가하기</a>
+    <a class="list-group-item list-group-item-action" th:if="${isAcceptMember}"
+       th:classappend="${currentMenu == 'create'}? active" href="#"
        th:href="@{'/party/'+ ${party.id}+'/meeting/create'}">등록하기</a>
     <a class="list-group-item list-group-item-action list-group-item-danger" th:if="${isManager}"
-       th:classappend="${currentMenu == 'managemember'}? active" href="#" th:href="@{'/party/'+ ${party.id}+'/manage-member'}">멤버 관리</a>
+       th:classappend="${currentMenu == 'managemember'}? active" href="#"
+       th:href="@{'/party/'+ ${party.id}+'/manage-member'}">멤버 관리</a>
     <a class="list-group-item list-group-item-action list-group-item-danger" th:if="${isManager}"
-       th:classappend="${currentMenu == 'manageparty'}? active" href="#" th:href="@{'/party/'+ ${party.id}+'/manage-party'}">모임 관리</a>
+       th:classappend="${currentMenu == 'manageparty'}? active" href="#"
+       th:href="@{'/party/'+ ${party.id}+'/manage-party'}">모임 관리</a>
 </div>
 <script th:inline="javascript" th:fragment="csrf-script">
     $(function () {

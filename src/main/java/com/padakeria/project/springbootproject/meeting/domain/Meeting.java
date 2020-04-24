@@ -51,6 +51,8 @@ public class Meeting {
     private LocalDateTime recruitEndingDate;
     private LocalDateTime meetingStartingDate;
 
+    private LocalDateTime creation;
+
     @Builder
     public Meeting(Account owner, Party party, Set<Account> accounts, String name, String description, List<String> imagesUrl, String location, Point locationPoint, Integer maxPeople, LocalDateTime recruitStaringDate, LocalDateTime recruitEndingDate, LocalDateTime meetingStartingDate) {
         this.owner = owner;
@@ -65,10 +67,20 @@ public class Meeting {
         this.recruitStaringDate = recruitStaringDate;
         this.recruitEndingDate = recruitEndingDate;
         this.meetingStartingDate = meetingStartingDate;
+        this.creation = LocalDateTime.now();
         this.accounts = new LinkedHashSet<>();
     }
 
     public void addAccount(Account account) {
         this.accounts.add(account);
+    }
+
+    public boolean isJoinable(Account account) {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isAfter(this.recruitStaringDate) && now.isBefore(this.recruitEndingDate) && !isMember(account);
+    }
+
+    private boolean isMember(Account enrollmentAccount) {
+        return this.accounts.stream().anyMatch(account -> account.equals(enrollmentAccount));
     }
 }

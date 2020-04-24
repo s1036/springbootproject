@@ -12,6 +12,10 @@ import org.springframework.data.geo.Point;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,28 +24,30 @@ import java.util.List;
 @NoArgsConstructor
 public class MeetingRequestDto {
 
-    private String ownerNickname;
-
     @Length(min = 5, max = 20)
     private String name;
 
     private String description;
 
+    @NotEmpty
     private String location;
 
     private Double locationPointX;
 
     private Double locationPointY;
 
+    @Positive
+    @Min(value = 2)
+    @Max(value = 200)
     private Integer maxPeople;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime recruitStartingDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime recruitEndingDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime meetingStartingDate;
 
     private List<MultipartFile> file;
@@ -81,8 +87,7 @@ public class MeetingRequestDto {
     }
 
     @Builder
-    public MeetingRequestDto(String ownerNickname, String name, String description, String location, Double locationPointX, Double locationPointY, Integer maxPeople, LocalDateTime recruitStartingDate, LocalDateTime recruitEndingDate, LocalDateTime meetingStartingDate) {
-        this.ownerNickname = ownerNickname;
+    public MeetingRequestDto(String name, String description, String location, Double locationPointX, Double locationPointY, Integer maxPeople, LocalDateTime recruitStartingDate, LocalDateTime recruitEndingDate, LocalDateTime meetingStartingDate) {
         this.name = name;
         this.description = description;
         this.location = location;

@@ -4,10 +4,12 @@ import com.padakeria.project.springbootproject.account.domain.Account;
 import com.padakeria.project.springbootproject.meeting.domain.Meeting;
 import com.padakeria.project.springbootproject.meeting.domain.MeetingRepository;
 import com.padakeria.project.springbootproject.meeting.dto.MeetingRequestDto;
+import com.padakeria.project.springbootproject.meeting.dto.MeetingResponseDto;
 import com.padakeria.project.springbootproject.party.domain.Member;
 import com.padakeria.project.springbootproject.party.domain.Party;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,13 @@ public class MeetingService {
         return meeting;
     }
 
+    public Page<MeetingResponseDto> findPagedMeeting(Integer page) {
+        Pageable realPage = PageRequest.of(page <= 0 ? 0 : page - 1, 5, new Sort(Sort.Direction.DESC, "creation"));
+        Page<Meeting> meetings = meetingRepository.findAll(realPage);
+
+        long totalElements = meetings.getTotalElements();
+        return new PageImpl<>(meetings.stream().map(MeetingResponseDto::new).collect(Collectors.toList()), realPage, totalElements);
+    }
     private boolean fileCheck(List<MultipartFile> file) {
         return file != null && !Objects.equals(file.get(0).getOriginalFilename(), "") && !file.isEmpty();
     }
@@ -60,7 +70,6 @@ public class MeetingService {
             String filePath = savePath + UUID.randomUUID().toString().replace("-", "") + filename;
             imagesUrl.add(filePath);
             File file = new File(filePath);
-
             image.transferTo(file);
         }
         return imagesUrl;

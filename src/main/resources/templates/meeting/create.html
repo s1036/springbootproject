@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="fragments.html::head">
 </head>
 <head><title>모임 생성 페이지</title>
@@ -186,21 +186,30 @@
             color: #777;
         }
     </style>
+    <link rel="stylesheet" href="/node_modules/jquery-datetimepicker/jquery.datetimepicker.css">
+    <script src="/node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js"></script>
 </head>
 <body class="bg-light">
 <div th:replace="fragments.html::main-nav"></div>
 <div class="container">
+    <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+        <span th:text="${message}">메시지</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="row mt-5 justify-content-center">
         <div class="col-12">
             <div class="row mt-12">
-                <form class="col-sm-12" th:action="@{'/party/'+ ${party.id}+'/meeting/create'}" th:object="${meetingRequestDto}"
+                <form class="col-sm-12" th:action="@{'/party/'+ ${party.id}+'/meeting/create'}"
+                      th:object="${meetingRequestDto}"
                       method="post" enctype="multipart/form-data" novalidate>
                     <div class="form-group">
                         <label for="name">모임명</label>
                         <input id="name" type="text" th:field="*{name}" class="form-control"
                                placeholder="모임의 이름을 넣어주세요" aria-describedby="nameHelp" required>
-                        <small id="bioHelp" class="form-text text-muted">
-                            3에서 30자 사이의 이름을 입력해주세요
+                        <small id="nameHelp" class="form-text text-muted">
+                            5에서 30자 사이의 이름을 입력해주세요
                         </small>
                         <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                             형식에 맞지 않습니다
@@ -210,8 +219,8 @@
 
                     <div class="form-group">
                         <label for="maxPeople">인원수</label>
-                        <input id="maxPeople" type="text" th:field="*{maxPeople}" class="form-control"
-                               placeholder="최대 인원수를 입력해주세요" aria-describedby="subjectHelp" required>
+                        <input id="maxPeople" type="number" th:field="*{maxPeople}" class="form-control"
+                               placeholder="최대 인원수를 입력해주세요" aria-describedby="maxPeopleHelp" required>
                         <small id="maxPeopleHelp" class="form-text text-muted">
                             해당 모임의 최대 인원수를 입력해주세요
                         </small>
@@ -220,7 +229,42 @@
                             반드시 입력해야 합니다.
                         </small>
                     </div>
-
+                    <div class="form-group">
+                        <label for="recruitStartingDate">모집시작시간</label>
+                        <input id="recruitStartingDate" class="datetimepicker" type="text"
+                               th:field="*{recruitStartingDate}" readonly>
+                        <small id="recruitStartingDateHelp" class="form-text text-muted">
+                            모임의 모집 시작 시간을 선택해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitStartingDate')}"
+                               th:errors="*{recruitStartingDate}">
+                            반드시 입력해야 합니다.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="recruitEndingDate">모집종료시간</label>
+                        <input id="recruitEndingDate" class="datetimepicker" type="text"
+                               th:field="*{recruitEndingDate}" readonly>
+                        <small id="recruitEndingDateHelp" class="form-text text-muted">
+                            모임의 모집 종료 시간을 선택해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('recruitEndingDate')}"
+                               th:errors="*{recruitEndingDate}">
+                            반드시 입력해야 합니다.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="meetingStartingDate">모임시간</label>
+                        <input id="meetingStartingDate" class="datetimepicker" type="text"
+                               th:field="*{meetingStartingDate}" readonly>
+                        <small id="meetingStartingDateHelp" class="form-text text-muted">
+                            모임의 시간을 선택해주세요
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('meetingStartingDate')}"
+                               th:errors="*{meetingStartingDate}">
+                            반드시 입력해야 합니다.
+                        </small>
+                    </div>
                     <div class="form-group">
                         <label for="description">모임 소개</label>
                         <input id="description" type="text" th:field="*{description}" class="form-control"
@@ -277,7 +321,6 @@
     <div th:replace="fragments.html::footer"></div>
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a81e69e63de2c54e840b2fdf5065413f&libraries=services"></script>
-
     <script>
         // 마커를 담을 배열입니다
         var markers = [];
@@ -502,6 +545,13 @@
             }
         }
     </script>
+    <script>
+        $('.datetimepicker').datetimepicker({
+            lang: 'ko',
+            format: 'Y-m-d H:i:s'
+        });
+    </script>
+
 </div>
 </body>
 </html>

@@ -57,7 +57,6 @@ public class MeetingControllerTest {
         MockMultipartFile mockMultipartFile2 = new MockMultipartFile("file", "pizza.png", "image/png", "1234".getBytes());
         MeetingRequestDto meetingRequestDto = MeetingRequestDto.builder()
                 .name("야식 모임")
-                .ownerNickname(member.getAccount().getNickname())
                 .description("야식을 위한 모임")
                 .location("서울 어딘가")
                 .locationPointX(1.23213)
@@ -79,9 +78,9 @@ public class MeetingControllerTest {
                 .param("locationPointX", meetingRequestDto.getLocationPointX().toString())
                 .param("locationPointY", meetingRequestDto.getLocationPointY().toString())
                 .param("maxPeople", "5")
-                .param("recruitStartingDate", meetingRequestDto.getRecruitStartingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")))
-                .param("recruitEndingDate", meetingRequestDto.getRecruitEndingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")))
-                .param("meetingStartingDate", meetingRequestDto.getMeetingStartingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")))
+                .param("recruitStartingDate", meetingRequestDto.getRecruitStartingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .param("recruitEndingDate", meetingRequestDto.getRecruitEndingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .param("meetingStartingDate", meetingRequestDto.getMeetingStartingDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
