@@ -47,9 +47,9 @@ public class MeetingService {
         return meeting;
     }
 
-    public Page<MeetingResponseDto> findPagedMeeting(Integer page) {
+    public Page<MeetingResponseDto> findPagedMeeting(Integer page,Party party) {
         Pageable realPage = PageRequest.of(page <= 0 ? 0 : page - 1, 5, new Sort(Sort.Direction.DESC, "creation"));
-        Page<Meeting> meetings = meetingRepository.findByParty(realPage);
+        Page<Meeting> meetings = meetingRepository.findByParty(party,realPage);
 
         long totalElements = meetings.getTotalElements();
         return new PageImpl<>(meetings.stream().map(MeetingResponseDto::new).collect(Collectors.toList()), realPage, totalElements);

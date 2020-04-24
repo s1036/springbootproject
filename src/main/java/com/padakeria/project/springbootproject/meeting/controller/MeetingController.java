@@ -62,7 +62,7 @@ public class MeetingController {
         int pageValue;
         pageValue = page == null ? 1 : page;
 
-        Page<MeetingResponseDto> meetingResponseDto = meetingService.findPagedMeeting(pageValue);
+        Page<MeetingResponseDto> meetingResponseDto = meetingService.findPagedMeeting(pageValue,party);
 
         Member member = party.getCurrentMember(account);
         model.addAttribute("isMember", party.isMember(account));
